@@ -1,19 +1,24 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 app = Flask(__name__)
+
+#Secret key to protect against cookie editing etc
+app.config['SECRET_KEY'] = '144c3171a3fdeae712ed9bd8dac5994a'
 
 #A hardcoded sample list of books, to be replaced eventually with database access
 books = [
     {
-        'author': 'Writer Name',
-        'title': 'Sample Book',
-        'description': 'A book that was definitely written',
-        'isbn': 'A long confusing number'
+        'author': 'Jolkien Rolkien Rolkien Tolkien',
+        'title': 'The Hobbit',
+        'description': 'It\'s the hobbit, man',
+        'isbn': '9780582186552',
+        'imgurl': 'https://images-na.ssl-images-amazon.com/images/I/61Ng-W9EhBL._SY346_.jpg'
     },
     {
-        'author': 'Writer2 Name',
-        'title': 'Sample Book2',
-        'description': 'Another book that was definitely written',
-        'isbn': 'Another long confusing number'
+        'author': 'Some Mormon lady',
+        'title': 'Twilight',
+        'description': 'A book about some things, I didn\'t read it',
+        'isbn': '9789610007258',
+        'imgurl': 'https://images-na.ssl-images-amazon.com/images/I/31kH-OWxJ-L._SY346_.jpg'
     }
 ]
 
