@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{% if title %}
+	    <title>Flask Personal Library - {{ title }}</title>
+	{% else %}
+	    <title>Flask Personal Library</title>
+	{% endif %}
+</head>
+<body>
+	{% for book in books %}
+	    <h1>{{ book.title }}</h1>
+	    <p>By {{ book.author }} with ISBN {{ book.isbn }}</p>
+	    <p>{{ book.description }}</p>
+	{% endfor %}
+</body>
+</html>
