@@ -1,9 +1,7 @@
-from flask import Flask, render_template, url_for, flash, redirect
-from forms import RegistrationForm, LoginForm
-app = Flask(__name__)
-
-#Secret key to protect against cookie editing etc
-app.config['SECRET_KEY'] = '144c3171a3fdeae712ed9bd8dac5994a'
+from flask import render_template, url_for, flash, redirect
+from flaskBooks import app
+from flaskBooks.forms import RegistrationForm, LoginForm
+from flaskBooks.models import User, Book
 
 #A hardcoded sample list of books, to be replaced eventually with database access
 books = [
@@ -54,6 +52,3 @@ def login():
         else:
             flash('Login unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
-
-if __name__ == '__main__':
-	app.run(debug=True)
