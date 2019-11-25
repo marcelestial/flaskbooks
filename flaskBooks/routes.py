@@ -1,7 +1,8 @@
-from flask import render_template, url_for, flash, redirect
+from flask import render_template, url_for, flash, redirect, request
 from flaskBooks import app, db, bcrypt
 from flaskBooks.forms import RegistrationForm, LoginForm
 from flaskBooks.models import User, Book
+from flask_login import login_user, current_user, logout_user, login_required
 
 #A hardcoded sample list of books, to be replaced eventually with database access
 books = [
@@ -32,9 +33,11 @@ def home():
 def about():
 	return render_template('about.html', title='About')
 
-#The registration page route
+#The registration page route. Only visible if user is not logged in
 @app.route("/register", methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
@@ -45,14 +48,35 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
-#The login page route
+#The login page route. Only visible if user is not logged in
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        if form.email.data == 'admin@book.com' and form.password.data == 'password':
-            flash('You have been logged in!', 'success')
-            return redirect(url_for('home'))
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
+            next_page = request.args.get('next')
+            return redirect (next_page) if next_page else redirect(url_for('home'))
         else:
             flash('Login unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
+
+#The logout function route. Only visible if user is logged in
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+@app.route("/account")
+@login_required
+def account():
+    return render_template('account.html', title='Account')
+
+
+
+
+
+
