@@ -1,32 +1,16 @@
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, abort
 from flaskBooks import app, db, bcrypt
-from flaskBooks.forms import RegistrationForm, LoginForm
+from flaskBooks.forms import RegistrationForm, LoginForm, BookForm
 from flaskBooks.models import User, Book
 from flask_login import login_user, current_user, logout_user, login_required
 
-#A hardcoded sample list of books, to be replaced eventually with database access
-books = [
-    {
-        'author': 'Jolkien Rolkien Rolkien Tolkien',
-        'title': 'The Hobbit',
-        'description': 'It\'s the hobbit, man',
-        'isbn': '9780582186552',
-        'imgurl': 'https://images-na.ssl-images-amazon.com/images/I/61Ng-W9EhBL._SY346_.jpg'
-    },
-    {
-        'author': 'Some Mormon lady',
-        'title': 'Twilight',
-        'description': 'A book about some things, I didn\'t read it',
-        'isbn': '9789610007258',
-        'imgurl': 'https://images-na.ssl-images-amazon.com/images/I/31kH-OWxJ-L._SY346_.jpg'
-    }
-]
 
 #The home page route
 @app.route("/")
 @app.route("/home")
 def home():
-	return render_template('home.html', books=books)
+    books = Book.query.all()
+    return render_template('home.html', books=books)
 
 #The about page route
 @app.route("/about")
@@ -70,11 +54,55 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+#Route for uesr's account. Not used for anything right now.
 @app.route("/account")
 @login_required
 def account():
     return render_template('account.html', title='Account')
 
+#Route for adding a new book to user's library
+@app.route("/book/new", methods=['GET', 'POST'])
+@login_required
+def new_book():
+    form = BookForm()
+    if form.validate_on_submit():
+        book=Book(title=form.title.data, author=form.author.data, description=form.description.data, isbn=form.isbn.data, imgurl=form.imgurl.data, owner=current_user)
+        db.session.add(book)
+        db.session.commit()
+        flash('New book added to your library!', 'success')
+        return redirect(url_for('home'))
+    return render_template('create_book.html', title='New Book', 
+        form=form, legend='New Book')
+
+#Route for viewing a specific book's details
+@app.route("/book/<int:book_id>")
+def book(book_id):
+    book = Book.query.get_or_404(book_id)
+    return render_template('book.html', title=book.title, book=book)
+
+#Route for editing a book's details
+@app.route("/book/<int:book_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_book(book_id):
+    book = Book.query.get_or_404(book_id)
+    if book.owner != current_user:
+        abort(403)
+    form = BookForm()
+    if form.validate_on_submit():
+        book.title = form.title.data
+        book.author = form.author.data
+        book.description = form.description.data
+        book.isbn = form.isbn.data
+        book.imgurl = form.imgurl.data
+        db.session.commit()
+        flash('Your book data has been updated.', 'success')
+    form.title.data = book.title
+    form.author.data = book.author
+    form.description.data = book.description
+    form.isbn.data = book.isbn
+    forn.imgurl.data = book.imgurl
+    return render_template('create_book.html', title='Edit Book', 
+        form=form, legend='Edit Book')
 
 
 

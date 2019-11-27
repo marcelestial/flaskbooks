@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, URL
 from flaskBooks.models import User
 
 class RegistrationForm(FlaskForm):
@@ -38,3 +38,13 @@ class LoginForm(FlaskForm):
     						Length(min=8)])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
+
+class BookForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired(),
+                                Length(max=100)])
+    author = StringField('Author', validators=[DataRequired(),
+                                Length(max=50)])
+    description = TextAreaField('Summary', validators=[DataRequired()])
+    isbn = StringField('ISBN (optional)')
+    imgurl = StringField('Image URL (optional)')
+    submit = SubmitField('Add book to library')

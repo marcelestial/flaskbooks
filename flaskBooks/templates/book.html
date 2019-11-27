@@ -1,19 +1,17 @@
 {% extends "layout.html" %} <!-- Copy the generic page formatting of layout.html -->
 {% block content %} 
-<!-- Loop through the database of books and display each book's information -->
-	{% for book in books %}
+<!-- Display the book's information -->
 	    <article class="media content-section">
 	    	<div class="book-img">
 	    		<img src={{ book.imgurl }}>
 	    	</div>
 		  <div class="media-body">
 		    <div class="article-metadata">
-		      <h2><a class="article-title" href="{{ url_for('book', book_id=book.id) }}">{{ book.title }}</a></h2>
-		      <b class="mr-2" >{{ book.author }}</b>
+		      <a class="mr-2" href="#">{{ book.author }}</a>
 		      <small class="text-muted">ISBN# {{ book.isbn }}</small>
 		    </div>
-		      <p class="article-content">{{ book.description }}</p>
+		    <h2 class="article-title" href="#">{{ book.title }}</h2>
+		    <p class="article-content">{{ book.description }}</p>
 		  </div>
 		</article>
-	{% endfor %}
 {% endblock content %}
