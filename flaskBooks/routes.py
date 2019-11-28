@@ -106,7 +106,16 @@ def update_book(book_id):
     return render_template('create_book.html', title='Edit Book', 
         form=form, legend='Edit Book')
 
-
+@app.route("/book/<int:book_id>/delete", methods=['POST'])
+@login_required
+def delete_book(book_id):
+    book = Book.query.get_or_404(book_id)
+    if book.owner != current_user:
+        abort(403)
+    db.session.delete(book)
+    db.session.commit()
+    flash('Your book has been deleted.', 'success')
+    return redirect(url_for('home'))
 
 
 
