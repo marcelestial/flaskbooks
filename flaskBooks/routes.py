@@ -95,12 +95,14 @@ def update_book(book_id):
         book.isbn = form.isbn.data
         book.imgurl = form.imgurl.data
         db.session.commit()
-        flash('Your book data has been updated.', 'success')
-    form.title.data = book.title
-    form.author.data = book.author
-    form.description.data = book.description
-    form.isbn.data = book.isbn
-    forn.imgurl.data = book.imgurl
+        flash('Your book\'s data has been updated!', 'success')
+        return redirect(url_for('book', book_id=book.id))
+    elif request.method == 'GET':
+        form.title.data = book.title
+        form.author.data = book.author
+        form.description.data = book.description
+        form.isbn.data = book.isbn
+        form.imgurl.data = book.imgurl
     return render_template('create_book.html', title='Edit Book', 
         form=form, legend='Edit Book')
 

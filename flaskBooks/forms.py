@@ -47,4 +47,4 @@ class BookForm(FlaskForm):
     description = TextAreaField('Summary', validators=[DataRequired()])
     isbn = StringField('ISBN (optional)')
     imgurl = StringField('Image URL (optional)')
-    submit = SubmitField('Add book to library')
+    submit = SubmitField('Submit Book')
