@@ -1,19 +1,27 @@
 {% extends "layout.html" %} <!-- Copy the generic page formatting of layout.html -->
 {% block content %} 
-<!-- Loop through the database of books and display each book's information -->
-	{% for book in books %}
-	    <article class="media content-section">
-	    	<div class="book-img">
-	    		<img src={{ book.imgurl }}>
-	    	</div>
-		  <div class="media-body">
-		    <div class="article-metadata">
-		      <h2><a class="article-title" href="{{ url_for('book', book_id=book.id) }}">{{ book.title }}</a></h2>
-		      <b class="mr-2" >{{ book.author }}</b>
-		      <small class="text-muted">ISBN# {{ book.isbn }}</small>
-		    </div>
-		      <p class="article-content">{{ book.description }}</p>
-		  </div>
-		</article>
-	{% endfor %}
+<!-- If the user is logged in, display their collection -->
+	{% if current_user.is_authenticated %}
+<!-- Loop through the database of books and display each book that belongs to the current user -->
+		{% for book in books %}
+			{% if book.owner == current_user %}
+			    <article class="media content-section">
+			    	<div class="book-img">
+			    		<img src={{ book.imgurl }}>
+			    	</div>
+				  <div class="media-body">
+				    <div class="article-metadata">
+				      <h2><a class="article-title" href="{{ url_for('book', book_id=book.id) }}">{{ book.title }}</a></h2>
+				      <b class="mr-2" >{{ book.author }}</b>
+				      <small class="text-muted">ISBN# {{ book.isbn }}</small>
+				    </div>
+				      <p class="article-content">{{ book.description }}</p>
+				  </div>
+				</article>
+			{% endif %}
+		{% endfor %}
+<!-- If the user is NOT logged in, display the welcome page -->
+	{% else %}
+		<p>Log in or join now to build your own personal library!</p>
+	{% endif %}
 {% endblock content %}

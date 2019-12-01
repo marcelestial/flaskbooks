@@ -3,13 +3,14 @@ from flaskBooks import app, db, bcrypt
 from flaskBooks.forms import RegistrationForm, LoginForm, BookForm
 from flaskBooks.models import User, Book
 from flask_login import login_user, current_user, logout_user, login_required
+from sqlalchemy import desc
 
 
 #The home page route
 @app.route("/")
 @app.route("/home")
 def home():
-    books = Book.query.all()
+    books = Book.query.order_by(desc(Book.id)).all()
     return render_template('home.html', books=books)
 
 #The about page route
