@@ -16,3 +16,5 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
 from flaskBooks import routes
+
+app.jinja_env.add_extension('jinja2.ext.do')

@@ -1,12 +1,14 @@
+
+
 {% extends "layout.html" %} <!-- Copy the generic page formatting of layout.html -->
 {% block content %} 
 <!-- If the user is logged in, display their collection -->
 	{% if current_user.is_authenticated %}
-		{% hasbooks = false %}
+		{% set hasbooks = [] %}
 <!-- Loop through the database of books and display each book that belongs to the current user -->
 		{% for book in books %}
 			{% if book.owner == current_user %}
-				{% hasbooks = true %}
+				{% do hasbooks.append(1) %}
 			    <article class="media content-section">
 			    	<div class="book-img">
 			    		<img src={{ book.imgurl }}>
@@ -22,10 +24,14 @@
 				</article>
 			{% endif %}
 		{% endfor %}
-
-		{% if !hasbooks %}
+<!-- If the user has no books in their library, alert them to this fact-->
+		{% if hasbooks %}
+		{% else %}
 			<article class="media content-section">
-				<h2>You currently have no books in your library!</h2>
+				<div class="media-body">
+					<h2>You currently have no books in your library!</h2>
+					<p><a href="{{ url_for('new_book') }}">  Add some books</a></p>
+				</div>
 			</article>
 		{% endif %}
 <!-- If the user is NOT logged in, display the welcome page -->
