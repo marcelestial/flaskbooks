@@ -21,7 +21,7 @@ class Book(db.Model):
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     isbn = db.Column(db.String(), nullable=False)
-    imgurl = db.Column(db.String(), nullable=False, default='http://i.imgur.com/sJ3CT4V.gif')
+    imgurl = db.Column(db.String(), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):

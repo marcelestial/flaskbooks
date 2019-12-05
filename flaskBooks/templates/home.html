@@ -2,9 +2,11 @@
 {% block content %} 
 <!-- If the user is logged in, display their collection -->
 	{% if current_user.is_authenticated %}
+		{% hasbooks = false %}
 <!-- Loop through the database of books and display each book that belongs to the current user -->
 		{% for book in books %}
 			{% if book.owner == current_user %}
+				{% hasbooks = true %}
 			    <article class="media content-section">
 			    	<div class="book-img">
 			    		<img src={{ book.imgurl }}>
@@ -20,6 +22,12 @@
 				</article>
 			{% endif %}
 		{% endfor %}
+
+		{% if !hasbooks %}
+			<article class="media content-section">
+				<h2>You currently have no books in your library!</h2>
+			</article>
+		{% endif %}
 <!-- If the user is NOT logged in, display the welcome page -->
 	{% else %}
 		<p>Log in or join now to build your own personal library!</p>

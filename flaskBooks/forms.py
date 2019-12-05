@@ -46,5 +46,5 @@ class BookForm(FlaskForm):
                                 Length(max=50)])
     description = TextAreaField('Summary', validators=[DataRequired()])
     isbn = StringField('ISBN (optional)')
-    imgurl = StringField('Image URL (optional)')
+    imgurl = StringField('Image URL (optional)', default = 'http://i.imgur.com/sJ3CT4V.gif')
     submit = SubmitField('Submit Book')
