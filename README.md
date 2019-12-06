@@ -1,5 +1,5 @@
 # flaskbooks
-A Flask webapp for building user-specific personal book libraries. Stores book data including title, author, description, ISBN, and URL for cover image, and supports user registration and login.
+A Flask webapp for building user-specific personal book libraries. Stores book data including title, author, description, ISBN, and URL for cover image, and supports user registration and login. In addition to Python, Flask and HTML, uses CSS, Javascript, Bootstrap, SQLite, SQLAlchemy, and WTForms.
 ## Installation (Mac OS X)
 #### Clone the source locally:
 ```
